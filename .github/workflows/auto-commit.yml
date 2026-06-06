@@ -1,0 +1,23 @@
+name: Daily Auto Commit
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "$(date -u)" >> activity.log
+          git add activity.log
+          git commit -m "chore: daily activity $(date +%Y-%m-%d)"
+          git push
